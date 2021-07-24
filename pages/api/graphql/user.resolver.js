@@ -252,59 +252,7 @@ export default {
 
           return { token, user };
         }
-      } else if (input.facebookToken) {
-        const snsMeta = await facebook.getProfile(input.facebookToken);
-        if (!snsMeta) {
-          throw new Error("failed to login via facebook");
-        }
-
-        let user = await User.findOne({ facebookId: snsMeta.id }).populate(
-          "identities"
-        );
-        if (!user) {
-          user = await new User({ facebookId: snsMeta.id }).save();
-        }
-        const { identities, ..._user } = user.toObject();
-        const token = jwt.sign(_user, "shhhhh").toString();
-        user.snsMeta = snsMeta;
-        await user.save();
-        return { token, user };
-      } else if (input.googleToken) {
-        let snsMeta = await google.getProfile(input.googleToken);
-        if (!snsMeta) {
-          throw new Error("failed to login via google");
-        }
-
-        let user = await User.findOne({ googleId: snsMeta.id }).populate(
-          "identities"
-        );
-        if (!user) {
-          user = await new User({ googleId: snsMeta.id }).save();
-        }
-        const { identities, ..._user } = user.toObject();
-        const token = jwt.sign(_user, "shhhhh").toString();
-        user.snsMeta = snsMeta;
-        await user.save();
-        return { token, user };
-      } else if (input.appleToken) {
-        let snsMeta = await apple.getProfile(input.appleToken);
-        if (!snsMeta) {
-          throw new Error("failed to login via apple");
-        }
-
-        let user = await User.findOne({ appleId: snsMeta.id }).populate(
-          "identities"
-        );
-        if (!user) {
-          user = await new User({ appleId: snsMeta.id }).save();
-        }
-        const { identities, ..._user } = user.toObject();
-        const token = jwt.sign(_user, "shhhhh").toString();
-        user.snsMeta = snsMeta;
-        await user.save();
-        return { token, user };
-      }
-
+      } 
       return null;
     },
 

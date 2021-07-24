@@ -267,46 +267,7 @@ const RegisterModal = () => {
                   </HStack>
                 </Button>
               )}
-              <FacebookLogin
-                appId="1091464314720526"
-                fields="name,email,picture"
-                callback={responseFacebook}
-                render={(renderProps) => (
-                  <Button
-                    colorScheme="facebook"
-                    color="white"
-                    onClick={renderProps.onClick}
-                  >
-                    <HStack w="100%">
-                      <IoLogoFacebook size={18} color="white" />
-                      <Text flex={1} minW={0} w="100%">
-                        {getWording("register.sign_up_with_facebook")}
-                      </Text>
-                    </HStack>
-                  </Button>
-                )}
-              />
-              <GoogleLogin
-                clientId="452094479729-ra8prl39vh78qc4rucrpdu5p0l15e1rb.apps.googleusercontent.com"
-                render={(renderProps) => (
-                  <Button
-                    colorScheme="google"
-                    color="white"
-                    onClick={renderProps.onClick}
-                  >
-                    <HStack w="100%">
-                      <IoLogoGoogle size={18} color="white" />
-                      <Text flex={1} minW={0} w="100%">
-                        {getWording("register.sign_up_with_google")}
-                      </Text>
-                    </HStack>
-                  </Button>
-                )}
-                buttonText="Login"
-                onSuccess={responseGoogle}
-                onFailure={responseGoogle}
-                cookiePolicy={"single_host_origin"}
-              />
+              
               <AppleLogin
                 clientId="com.talkboxapp.teamwork.service.hku"
                 redirectURI="https://jciep.uat.talkbox.net/oauth/apple"
