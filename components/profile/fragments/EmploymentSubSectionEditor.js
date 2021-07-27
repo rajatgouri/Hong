@@ -1,4 +1,3 @@
-import React from "react";
 import {
   Text,
   Box,
@@ -12,7 +11,7 @@ import {
   FormHelperText,
   Button,
   SimpleGrid,
-  GridItem,
+  GridItem
 } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import { Controller, useFieldArray } from "react-hook-form";
@@ -22,7 +21,7 @@ import wordExtractor from "../../../utils/wordExtractor";
 import Dot from "./Dot";
 import MonthPicker from "./MonthPicker";
 
-const EmploymentSubSectionEditor = ({ form: { register, control, watch } }) => {
+const EmploymentSubSectionEditor = ({ form: { register, control } }) => {
   const router = useRouter();
   const { page, enums } = IdentityProfileStore.useContext();
   const { fields, append, remove, insert } = useFieldArray({
@@ -60,12 +59,10 @@ const EmploymentSubSectionEditor = ({ form: { register, control, watch } }) => {
               startDatetime,
               endDatetime,
             });
-            const errors = {};
+            const errors = {}
             errors?.employment?.[index];
             const prefix = `employment[${index}]`;
             const borderColor = present ? "#00BFBA" : "#eee";
-
-            const isCurrent = watch(`${prefix}.present`);
             return (
               <Box
                 pl={[0,2]}
@@ -88,6 +85,7 @@ const EmploymentSubSectionEditor = ({ form: { register, control, watch } }) => {
                   mb={12}
                   spacing={0.5}
                   fontSize={["lg", "sm"]}
+                  spacing={0}
                   align="start"
                 >
                   <HStack alignSelf="flex-end" pt={2}>
@@ -152,6 +150,12 @@ const EmploymentSubSectionEditor = ({ form: { register, control, watch } }) => {
                       {...register(`${prefix}.industry`, {})}
                       defaultValue={industry}
                     >
+                      <option key={"unselected"} value={""}>
+                        {wordExtractor(
+                          page?.content?.wordings,
+                          "empty_text_label"
+                        )}
+                      </option>
                       {(enums?.EnumIndustryList ?? []).map(
                         ({
                           key: value,
@@ -185,6 +189,12 @@ const EmploymentSubSectionEditor = ({ form: { register, control, watch } }) => {
                       {...register(`${prefix}.employmentType`, {})}
                       defaultValue={employmentType}
                     >
+                      <option key={"unselected"} value={""}>
+                        {wordExtractor(
+                          page?.content?.wordings,
+                          "empty_text_label"
+                        )}
+                      </option>
                       {(enums?.EnumEmploymentModeList ?? []).map(
                         ({
                           key: value,
@@ -225,16 +235,12 @@ const EmploymentSubSectionEditor = ({ form: { register, control, watch } }) => {
                   <SimpleGrid columns={[1, 1, 1, 2]} width="100%">
                     <GridItem>
                       <FormControl
+
                         as={HStack}
                         align="center"
                         isInvalid={errors?.industry?.message}
                       >
-                        <FormLabel
-                          w={[24, 24, 32]}
-                          fontSize="sm"
-                          color="#999"
-                          mb={0}
-                        >
+                        <FormLabel w={[24, 24, 32]} fontSize="sm" color="#999" mb={0}>
                           {wordExtractor(
                             page?.content?.wordings,
                             "field_label_employment_startDatetime"
@@ -270,19 +276,17 @@ const EmploymentSubSectionEditor = ({ form: { register, control, watch } }) => {
                           control={control}
                           defaultValue={endDatetime}
                           render={({ field }) => (
-                            <MonthPicker
-                              page={page}
-                              {...field}
-                              isDisabled={isCurrent}
-                            />
+                            <MonthPicker page={page} {...field} />
                           )}
                         />
                         <FormHelperText color="red">
                           {errors?.endDatetime?.message}
                         </FormHelperText>
                       </FormControl>
+
                     </GridItem>
                   </SimpleGrid>
+
 
                   <FormControl
                     pt={2}

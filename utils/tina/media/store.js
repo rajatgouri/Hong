@@ -28,7 +28,7 @@ export default class MongooseMediaStore {
       console.error(e);
     }
   }
-  async list({ directory = directory ?? "/", limit, offset = 0 }) {
+  async list({ directory = directory ?? "/", limit, offset }) {
     const query = gql`
       query MediaList($directory: String!, $offset: Int!, $limit: Int!) {
         MediaList(directory: $directory, offset: $offset, limit: $limit) {

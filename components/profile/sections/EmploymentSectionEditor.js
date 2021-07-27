@@ -53,6 +53,7 @@ const EmploymentSectionEditor = () => {
       align="stretch"
     >
       <VStack align="stretch">
+        {/* <Text>{JSON.stringify({ organization, enums })}</Text> */}
         <HStack py={2} px={4} spacing={4} justifyContent="flex-end">
           <Button variant="link" onClick={removeEditSection}>
             {wordExtractor(page?.content?.wordings, "cancel_button_label")}
@@ -93,7 +94,7 @@ const EmploymentSectionEditor = () => {
           </Tag>
         </Wrap>
       </VStack>
-      <VStack px={8} py={4} align="stretch" spacing={4}>
+      <VStack px={8} py={4} align="stretch" spacing={6}>
         <Stack direction={["column", "column", "row"]}>
           <FormControl
             isRequired={true}

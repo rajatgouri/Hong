@@ -1,5 +1,4 @@
 export default {
-  unselected: { en: "(N/A)", zh: "沒指定" },
   graphicDesign: { en: "Graphic design", zh: "平面設計" },
   illustrationDrawing: { en: "Illustration drawing", zh: "插畫繪製" },
   animationDesign: { en: "Animation design", zh: "動畫設計" },

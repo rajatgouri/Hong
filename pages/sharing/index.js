@@ -1,6 +1,5 @@
 import {
   AspectRatio,
-  Button,
   chakra,
   GridItem,
   HStack,
@@ -34,7 +33,6 @@ import HighlightHeadline from "../../components/HighlightHeadline";
 import Container from "../../components/Container";
 import CategoryTag from "../../components/CategoryTag";
 import getSharedServerSideProps from "../../utils/server/getSharedServerSideProps";
-import wordExtractor from "../../utils/wordExtractor";
 
 const PAGE_KEY = "sharing";
 
@@ -74,10 +72,10 @@ const Sharing = ({ page, setting, lang }) => {
         category: router.query.category ?? undefined,
         limit: page?.content?.latestSection?.numOfPostsPerPage,
       });
-      totalRef.current = totalRecords;
       setLatestPosts((latestPosts) =>
         pageRef.current > 1 ? [...latestPosts, ...data] : data
       );
+      totalRef.current = totalRecords;
       pageRef.current++;
     } catch (err) {
       console.log("***** error", err);
@@ -116,7 +114,7 @@ const Sharing = ({ page, setting, lang }) => {
     fetchHottestPosts();
   }, []);
 
-  const featuredArticleCategory = getCategoryData(featuredArticle?.category);
+  const featuredArticleCategory = getCategoryData(featuredArticle.category);
 
   const SkeletonPlaceholder = () => (
     <Grid
@@ -125,9 +123,8 @@ const Sharing = ({ page, setting, lang }) => {
       justifyContent="center"
       pt="40px"
     >
-      {skeletonValue?.map((_, i) => (
+      {skeletonValue?.map(() => (
         <Box
-          key={i}
           display="flex"
           flexDirection="column"
           justifyContent="space-between"
@@ -140,14 +137,8 @@ const Sharing = ({ page, setting, lang }) => {
             mb="10px"
           />
           <Flex justifyContent="flex-start" mt="8px">
-            {[1, 2].map((_, i) => (
-              <Skeleton
-                key={i}
-                w="76px"
-                h="17px"
-                borderRadius="19px"
-                mr="8px"
-              />
+            {[1, 2].map(() => (
+              <Skeleton w="76px" h="17px" borderRadius="19px" mr="8px" />
             ))}
           </Flex>
           <Skeleton w="188px" h="36px" borderRadius="8px" mt="8px" />
@@ -216,7 +207,7 @@ const Sharing = ({ page, setting, lang }) => {
                 borderColor="white"
                 overflow="hidden"
               >
-                <Image src={featuredArticle?.coverImage} />
+                <Image src={featuredArticle.coverImage} />
               </AspectRatio>
               <VStack flex={1} minW={0} w="100%" align="start">
                 <Icon
@@ -232,16 +223,16 @@ const Sharing = ({ page, setting, lang }) => {
                     withIcon={false}
                   />
                   <Text fontSize="sm">
-                    {moment(featuredArticle?.publishDate).format(
+                    {moment(featuredArticle.publishDate).format(
                       "D MMM, hh:mm a"
                     )}
                   </Text>
                 </Wrap>
                 <Box borderRadius={16} pt={1} px={2} color={1} pb={16}>
                   <Text fontSize={("2xl", "4xl", "4xl")} fontWeight="bold">
-                    {featuredArticle?.title}
+                    {featuredArticle.title}
                   </Text>
-                  <Text>{featuredArticle?.excerpt}</Text>
+                  <Text>{featuredArticle.excerpt}</Text>
                 </Box>
               </VStack>
             </Stack>
@@ -269,7 +260,7 @@ const Sharing = ({ page, setting, lang }) => {
           pb={16}
         >
           <AspectRatio w={"100%"} ratio={4 / 3}>
-            <Image src={featuredArticle?.coverImage} />
+            <Image src={featuredArticle.coverImage} />
           </AspectRatio>
           <DividerSimple flip={true}></DividerSimple>
           <VStack
@@ -298,16 +289,14 @@ const Sharing = ({ page, setting, lang }) => {
                   withIcon={false}
                 />
                 <Text fontSize="sm">
-                  {moment(featuredArticle?.publishDate).format(
-                    "D MMM, hh:mm a"
-                  )}
+                  {moment(featuredArticle.publishDate).format("D MMM, hh:mm a")}
                 </Text>
               </Wrap>
               <Box borderRadius={16} pt={1} px={2} color={1}>
                 <Text fontSize={"xl"} fontWeight="bold">
-                  {featuredArticle?.title}
+                  {featuredArticle.title}
                 </Text>
-                <Text>{featuredArticle?.excerpt}</Text>
+                <Text>{featuredArticle.excerpt}</Text>
               </Box>
             </VStack>
           </VStack>
@@ -356,45 +345,6 @@ const Sharing = ({ page, setting, lang }) => {
                 />
               </Text>
             </Box>
-            {router?.query?.category && (
-              <HStack align="center" p={1}>
-                <Text>
-                  {wordExtractor(
-                    page?.content?.wordings,
-                    "selected_category_label"
-                  )}
-                </Text>
-                <CategoryTag
-                  size="sm"
-                  category={categories?.find(
-                    (category) => category.key === router.query.category
-                  )}
-                />
-                <Button
-                  size="sm"
-                  colorScheme="red"
-                  variant="link"
-                  onClick={() => {
-                    router.push(
-                      {
-                        pathname: "/sharing",
-                      },
-                      undefined,
-                      { shallow: true }
-                    );
-                  }}
-                >
-                  {wordExtractor(
-                    page?.content?.wordings,
-                    "cancel_button_label"
-                  )}
-                </Button>
-              </HStack>
-            )}
-            <Box>
-              {latestPosts.length} {totalRef.current}
-            </Box>
-
             <InfiniteScroll
               dataLength={latestPosts.length}
               next={fetchPosts}

@@ -1,4 +1,3 @@
-import { Text } from "@chakra-ui/react";
 import { useCallback } from "react";
 
 export const uuidv4 = () => {
@@ -47,28 +46,18 @@ export const getYoutubeLink = (url) => {
 
 export const useInjectParams = () => {
   return useCallback((template, params) => {
-    return Object.entries(params)
-      .reduce(
-        (_arr, [key, value]) => {
-          return _arr
-            .filter((_t) => !!_t)
-            .reduce((__arr, _t) => {
-              let _t_arr = [_t];
-              console.log(_t, "_t", typeof _t === "string");
-              if (typeof _t === "string") {
-                _t_arr = _t.split(`{{${key}}}`);
-              }
-              const __r = _t_arr.reduce(
-                (_r, __t, i) => (i === 0 ? [__t] : [..._r, value, __t]),
-                []
-              );
-              return [...__arr, ...__r];
-            }, []);
-        },
-        [template]
-      )
-      .map((x) => {
-        return typeof x === "string" ? <Text m={0}>{x}</Text> : x;
-      });
+    return Object.entries(params).reduce(
+      (_arr, [key, value]) => {
+        return _arr.reduce((__arr, _t) => {
+          const _t_arr = _t.split(`{{${key}}}`);
+          const __r = _t_arr.reduce(
+            (_r, __t, i) => (i === 0 ? [__t] : [..._r, value, __t]),
+            []
+          );
+          return [...__arr, ...__r];
+        }, []);
+      },
+      [template]
+    );
   }, []);
 };

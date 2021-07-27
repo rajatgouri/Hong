@@ -1,7 +1,7 @@
-import React from "react";
-import { useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 import withPageCMS from "../../utils/page/withPageCMS";
 import { getPage } from "../../utils/page/getPage";
+import { getConfiguration } from "../../utils/configuration/getConfiguration";
 import { VStack } from "@chakra-ui/layout";
 import { useRouter } from "next/router";
 import { gql } from "graphql-request";
@@ -9,36 +9,32 @@ import { getGraphQLClient } from "../../utils/apollo";
 import { Text, Box, Container, Spinner } from "@chakra-ui/react";
 import { useCredential } from "../../utils/user";
 
-import formidable from "formidable";
-import getSharedServerSideProps from "../../utils/server/getSharedServerSideProps";
-
 const PAGE_KEY = "appleLogin";
 
 export const getServerSideProps = async (context) => {
   const page = (await getPage({ key: PAGE_KEY, lang: context.locale })) ?? {};
-  const form = formidable({ multiples: true });
-
-  console.log(context.query);
-
-  const body = await new Promise((r) => {
-    form.parse(context.req, (err, fields) => {
-      r(fields);
-    });
-  });
-  console.log(body);
 
   return {
     props: {
       page,
-      id_token: body?.id_token || context.query.id_token,
       isLangAvailable: context.locale === page.lang,
-      ...getSharedServerSideProps(context)?.props,
+      wordings: await getConfiguration({
+        key: "wordings",
+        lang: context.locale,
+      }),
+      header: await getConfiguration({ key: "header", lang: context.locale }),
+      footer: await getConfiguration({ key: "footer", lang: context.locale }),
+      navigation: await getConfiguration({
+        key: "navigation",
+        lang: context.locale,
+      }),
     },
   };
 };
 
-const AppleLogin = ({ id_token: accessToken }) => {
+const appleLogin = ({ page }) => {
   const router = useRouter();
+  const { accessToken } = router.query;
   const [setCredential] = useCredential();
 
   useEffect(() => {
@@ -51,9 +47,6 @@ const AppleLogin = ({ id_token: accessToken }) => {
               user {
                 id
                 email
-                facebookId
-                googleId
-                appleId
                 snsMeta {
                   profilePicUrl
                   displayName
@@ -147,19 +140,12 @@ const AppleLogin = ({ id_token: accessToken }) => {
 
         const data = await getGraphQLClient().request(mutation, variables);
         setCredential(data?.UserLogin);
-        if (data?.UserLogin) {
-          const user = data?.UserLogin?.user;
-          if (user?.identities?.length === 0) {
-            router.push("/user/identity/select");
-          } else {
-            router.push("/");
-          }
-        }
+        router.push("/");
       } catch (e) {
         console.log(e);
       }
     })();
-  }, [accessToken, router, setCredential]);
+  }, [accessToken]);
 
   return (
     <VStack w="100%" spacing={0} align="stretch">
@@ -181,6 +167,6 @@ const AppleLogin = ({ id_token: accessToken }) => {
   );
 };
 
-export default withPageCMS(AppleLogin, {
+export default withPageCMS(appleLogin, {
   key: PAGE_KEY,
 });

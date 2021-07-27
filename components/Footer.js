@@ -1,4 +1,3 @@
-import React from "react";
 import { Divider, HStack, Text } from "@chakra-ui/layout";
 import {
   Box,
@@ -32,15 +31,15 @@ const Footer = ({ footer }) => {
                   <Box w="150px" color="gray.500">
                     {title}
                   </Box>
-                  <Wrap spacing={4} align="center">
+                  <Wrap spacing={8} align="center">
                     {(partners ?? []).map(
                       ({ id: _id, label, url, logo = "" }) => {
                         return (
-                          <WrapItem spacing={0} pr={2} key={_id} maxH={1162}>
+                          <WrapItem key={_id} maxH={12}>
                             <Link href={url} key={_id}>
                               <Image
                                 alt={label}
-                                maxH={16}
+                                maxH={12}
                                 h="100%"
                                 src={logo}
                               />
@@ -60,6 +59,7 @@ const Footer = ({ footer }) => {
             spacing={8}
             align={"start"}
             direction={["column", "column", "row", "row"]}
+            spacing={8}
           >
             <Box>
               <Image maxW={150} src={footer?.logo} />
@@ -70,56 +70,47 @@ const Footer = ({ footer }) => {
               minW={0}
               w="100%"
               columns={[2, 2, 3, 5, 5]}
-              gap={12}
+              gap={[8,12]}
+              padding="0 2%"
             >
-              {(footer?.sitemap ?? []).map(
-                ({ id, links = [], title, url = "/", social = [] }) => (
-                  <VStack key={id} align="start">
-                    <NextLink href={url}>
-                      <Button
-                        textAlign="left"
-                        variant="link"
-                        color="black"
-                        fontWeight="bold"
-                        fontSize={["xl", "xl", "lg"]}
-                      >
-                        {title}
-                      </Button>
-                    </NextLink>
-                    <Text w="100%">
-                      {(social ?? []).map(({ icon, id, url }) => {
-                        return (
-                          <a href={url} key={id}>
-                            <Image
-                              display="inline-flex"
-                              src={icon}
-                              height="30px"
-                            ></Image>
-                          </a>
-                        );
-                      })}
-                    </Text>
-
-                    {(links ?? []).map(
-                      ({ id: _id, url = "/", label = "" }, i) => {
-                        return (
-                          <NextLink id={_id} href={url} key={i}>
-                            <Button
-                              fontSize={["xl", "xl", "lg"]}
-                              textAlign="left"
-                              variant="link"
-                              fontWeight="normal"
-                              color="black"
-                            >
-                              {label}
-                            </Button>
-                          </NextLink>
-                        );
-                      }
-                    )}
-                  </VStack>
-                )
-              )}
+              {(footer?.sitemap ?? []).map(({ id, links = [], title, url = "/", social= [] }) => (
+                <VStack key={id} align="start">
+                  <NextLink href={url}>
+                    <Button
+                      textAlign="left"
+                      variant="link"
+                      color="black"
+                      fontWeight="bold"
+                      fontSize={["xl", "xl", "lg"]}
+                    >
+                      {title}
+                    </Button>
+                  </NextLink>
+                  <Text w="100%">
+                  {
+                    (social ?? []).map(({icon, id, url})=>{
+                      return <a href={url}><Image display="inline-flex" src={icon} height="30px"></Image></a>
+                    })
+                  }
+                  </Text>
+                  
+                  {(links ?? []).map(({ id: _id, url = "/", label = "" }) => {
+                    return (
+                      <NextLink id={_id} href={url}>
+                        <Button
+                          fontSize={["xl", "xl", "lg"]}
+                          textAlign="left"
+                          variant="link"
+                          fontWeight="normal"
+                          color="black"
+                        >
+                          {label}
+                        </Button>
+                      </NextLink>
+                    );
+                  })}
+                </VStack>
+              ))}
             </SimpleGrid>
           </Stack>
 

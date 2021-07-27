@@ -53,10 +53,6 @@ const [AppProvider, useAppContext] = constate((props) => {
         name: "emailVerifySent",
         label: "Email Verify Sent Modal (emailVerifySent)",
       },
-      {
-        name: "resentPassword",
-        label: "Reset Password Modal (resentPassword)",
-      },
     ],
     key: "wordings",
     initialValue: props?.wordings?.value,
@@ -82,7 +78,6 @@ const [AppProvider, useAppContext] = constate((props) => {
   const registerModalDisclosure = useDisclosureWithParams();
   const otpVerifyModalDisclosure = useDisclosureWithParams();
   const emailVerifySentModalDisclosure = useDisclosureWithParams();
-  const resetPasswordModalDisclosure = useDisclosureWithParams();
   const [user, setUser] = useState(null);
   const [identityId, setIdentityId] = useState(null);
   const isLoggedIn = useMemo(() => !!user, [user]);
@@ -127,7 +122,6 @@ const [AppProvider, useAppContext] = constate((props) => {
     registerModalDisclosure,
     otpVerifyModalDisclosure,
     emailVerifySentModalDisclosure,
-    resetPasswordModalDisclosure,
     user,
     setUser,
     isLoggedIn,

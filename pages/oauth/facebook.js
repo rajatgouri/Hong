@@ -1,5 +1,4 @@
-import React from "react";
-import { useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 import withPageCMS from "../../utils/page/withPageCMS";
 import { getPage } from "../../utils/page/getPage";
 import { getConfiguration } from "../../utils/configuration/getConfiguration";
@@ -33,7 +32,7 @@ export const getServerSideProps = async (context) => {
   };
 };
 
-const FacebookLogin = ({ page }) => {
+const facebookLogin = ({ page }) => {
   const router = useRouter();
   const { accessToken } = router.query;
   const [setCredential] = useCredential();
@@ -48,9 +47,6 @@ const FacebookLogin = ({ page }) => {
               user {
                 id
                 email
-                facebookId
-                googleId
-                appleId
                 snsMeta {
                   profilePicUrl
                   displayName
@@ -144,19 +140,12 @@ const FacebookLogin = ({ page }) => {
 
         const data = await getGraphQLClient().request(mutation, variables);
         setCredential(data?.UserLogin);
-        if (data?.UserLogin) {
-          const user = data?.UserLogin?.user;
-          if (user?.identities?.length === 0) {
-            router.push("/user/identity/select");
-          } else {
-            router.push("/");
-          }
-        }
+        router.push("/");
       } catch (e) {
         console.log(e);
       }
     })();
-  }, [accessToken, router, setCredential]);
+  }, [accessToken]);
 
   return (
     <VStack w="100%" spacing={0} align="stretch">
@@ -178,6 +167,6 @@ const FacebookLogin = ({ page }) => {
   );
 };
 
-export default withPageCMS(FacebookLogin, {
+export default withPageCMS(facebookLogin, {
   key: PAGE_KEY,
 });

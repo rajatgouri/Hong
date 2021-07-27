@@ -17,10 +17,6 @@ import {
   Wrap,
   WrapItem,
   Divider,
-  Tooltip,
-  Stack,
-  Flex,
-  Heading,
 } from "@chakra-ui/react";
 import { AddIcon, MinusIcon, ExternalLinkIcon } from "@chakra-ui/icons";
 import { getConfiguration } from "../../utils/configuration/getConfiguration";
@@ -28,14 +24,10 @@ import { getPage } from "../../utils/page/getPage";
 import withPageCMS from "../../utils/page/withPageCMS";
 import pwdFieldsForCMS from "../../utils/tina/pwdFieldsForCMS";
 import MultiTextRenderer from "../../components/MultiTextRenderer";
+import wordExtractor from "../../utils/wordExtractor";
 import React from "react";
 import Container from "../../components/Container";
-import {
-  AiFillInfoCircle,
-  AiOutlineBulb,
-  AiOutlineInfoCircle,
-} from "react-icons/ai";
-import { HiOutlineDotsHorizontal } from "react-icons/hi";
+import { AiFillBulb, AiOutlineBulb } from "react-icons/ai";
 import DividerA from "../../components/DividerA";
 import DividerTriple from "../../components/DividerTriple";
 import ApostropheHeadline from "../../components/ApostropheHeadline";
@@ -82,7 +74,7 @@ const PwdDetail = ({ page }) => {
         const remaining = [];
         const pwds = page.content.pwdList.pwds;
         let currentIndex = pwds.findIndex((data) => data.slug === pwd.slug);
-        for (let i = 1; i <= 3; i++) {
+        for (let i = 1; i <= 4; i++) {
           if (currentIndex + i < pwds.length - 1) {
             remaining.push(pwds[currentIndex + i]);
           } else {
@@ -93,7 +85,7 @@ const PwdDetail = ({ page }) => {
         setRemainingPwds(remaining);
       }
     }
-  }, [page.content.pwdList.pwds, pwd]);
+  }, [pwd]);
 
   const performSelection = (data, item) => {
     setActiveJob(item);
@@ -134,16 +126,9 @@ const PwdDetail = ({ page }) => {
         >
           <Image src={pwd?.icon} height={[16, 16, 88]} />
         </Box>
-        <HStack zIndex={2} fontSize={["24", "24", "56"]}>
-          <Text fontWeight="bold">{pwd?.name}</Text>
-          {pwd?.remark && (
-            <Tooltip hasArrow label={pwd?.remark}>
-              <Text d="inline">
-                <Icon as={AiOutlineInfoCircle}></Icon>
-              </Text>
-            </Tooltip>
-          )}
-        </HStack>
+        <Text zIndex={2} fontWeight="bold" fontSize={["24", "24", "56"]}>
+          {pwd?.name}
+        </Text>
         <Box zIndex={2}>
           <MultiTextRenderer
             textAlign="center"
@@ -157,7 +142,6 @@ const PwdDetail = ({ page }) => {
           right="0"
           height="86%"
           src={pwd?.descriptionStyles?.bgGradient}
-          zIndex={1}
         />
         <Box pos="absolute" bottom="0" w="100%">
           <DividerA
@@ -278,7 +262,7 @@ const PwdDetail = ({ page }) => {
             <Text fontSize={["24px", "24px", "56px"]} fontWeight="bold">
               {pwd?.traitSection?.title}
             </Text>
-            <Text zIndex={2} fontSize="16px" position="relative">
+            <Text zIndex={2} fontSize="16px" position="relative" zIndex="1">
               {pwd?.traitSection?.description}
             </Text>
           </Box>
@@ -293,41 +277,7 @@ const PwdDetail = ({ page }) => {
           />
         </Box>
 
-        <Stack
-          position="relative"
-          direction={["column", "row"]}
-          mt={16}
-          zIndex={2}
-          spacing={16}
-        >
-          <VStack minW="50%" spacing={8}>
-            <Box w="100%" py={2} borderBottom="1px">
-              <Heading size="lg">
-                {pwd?.traitSection?.prosSection?.title}
-              </Heading>
-            </Box>
-            {pwd?.traitSection?.prosSection?.list?.map((text, i) => (
-              <HStack spacing={4} w="100%" key={i} minH="32px">
-                <Image src={pwd?.traitSection?.prosSection?.icon} w="32px" />
-                <Text fontSize="lg">{text}</Text>
-              </HStack>
-            ))}
-          </VStack>
-          <VStack minW="50%" spacing={8}>
-            <Box w="100%" py={2} borderBottom="1px">
-              <Heading size="lg">
-                {pwd?.traitSection?.consSection?.title}
-              </Heading>
-            </Box>
-            {pwd?.traitSection?.consSection?.list?.map((text, i) => (
-              <HStack spacing={4} w="100%" key={i} minH="32px">
-                <Image src={pwd?.traitSection?.consSection?.icon} w="32px" />
-                <Text fontSize="lg">{text}</Text>
-              </HStack>
-            ))}
-          </VStack>
-        </Stack>
-        {/* <Grid
+        <Grid
           templateColumns={[
             "repeat(1, 1fr)",
             "repeat(1, 1fr)",
@@ -352,14 +302,18 @@ const PwdDetail = ({ page }) => {
               flexDirection="column"
               transition="all 0.2s"
               cursor="default"
+              // _hover={{
+              //   boxShadow: "lg",
+              //   cursor: "pointer",
+              // }}
             >
               <Text fontSize="lg">{trait.captionTop}</Text>
-              <Text fontSize={["2xl", "2xl", "2xl"]} fontWeight="bold">
+              <Text fontSize={["24px", "24px", "36px"]} fontWeight="bold">
                 {trait.text}
               </Text>
             </Box>
           ))}
-        </Grid> */}
+        </Grid>
         <Text mt={["56px", "56px", "80px"]} fontSize="14px">
           {(pwd?.traitSection?.extraInfo ?? []).map((data, index) => (
             <chakra.span key={index}>{data.text}</chakra.span>
@@ -428,28 +382,11 @@ const PwdDetail = ({ page }) => {
               </GridItem>
             ))}
           </SimpleGrid>
-          {pwd?.careerSection?.extraInfo?.length > 0 && (
-            <Box
-              mt={["56px", "56px", "80px"]}
-              zIndex={3}
-              p={4}
-              bg="white"
-              borderRadius="xl"
-            >
-              <HStack>
-                <Icon
-                  as={AiFillInfoCircle}
-                  fontSize="48px"
-                  color="rgb(252,210,0)"
-                />
-                <Text fontSize="14px">
-                  {(pwd?.careerSection?.extraInfo ?? []).map((data, index) => (
-                    <chakra.span key={index}>{data.text}</chakra.span>
-                  ))}
-                </Text>
-              </HStack>
-            </Box>
-          )}
+          <Text mt={["56px", "56px", "80px"]} fontSize="14px" zIndex={3}>
+            {(pwd?.careerSection?.extraInfo ?? []).map((data, index) => (
+              <chakra.span key={index}>{data.text}</chakra.span>
+            ))}
+          </Text>
         </Container>
 
         <Box>
@@ -532,9 +469,8 @@ const PwdDetail = ({ page }) => {
             bottom="0"
             w={["0", "0", "0", "145px"]}
           />
-          {pwd?.videoSection?.videos.map((video, i) => (
+          {pwd?.videoSection?.videos.map((video) => (
             <AspectRatio
-              key={i}
               border="5px solid #FFFFFF"
               maxW="668px"
               ratio={668 / 376}
@@ -545,9 +481,9 @@ const PwdDetail = ({ page }) => {
               <iframe
                 src={video.url}
                 title="PWD Video"
-                frameBorder="0"
+                frameborder="0"
                 allow="accelerometer; autoPlay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
+                allowfullscreen
               />
             </AspectRatio>
           ))}
@@ -579,7 +515,7 @@ const PwdDetail = ({ page }) => {
                   mb="8px"
                 />
                 {(category.links ?? []).map((link, i) => (
-                  <Box key={i} display="flex" pb="6px">
+                  <Box display="flex" pb="6px">
                     <Text pr="8px" fontSize="16px">
                       .
                     </Text>
@@ -638,9 +574,8 @@ const PwdDetail = ({ page }) => {
           w="100%"
           px="10%"
         >
-          {(remainingPwds ?? []).map((data, i) => (
+          {(remainingPwds ?? []).map((data) => (
             <Box
-              key={i}
               transition="all 0.2s"
               w="100%"
               h={["132px", "132px", "122px"]}
@@ -663,28 +598,6 @@ const PwdDetail = ({ page }) => {
               </Text>
             </Box>
           ))}
-          <Box
-            transition="all 0.2s"
-            w="100%"
-            h={["132px", "132px", "122px"]}
-            bg="#FAFAFA"
-            borderRadius="10px"
-            cursor="pointer"
-            _hover={{
-              boxShadow: "12px 12px 24px 0px rgba(30,30,30,0.1)",
-            }}
-            display="flex"
-            flexDirection="column"
-            justifyContent="center"
-            alignItems="center"
-            px="12px"
-            onClick={() => router.push("/people-with-disabilities#list")}
-          >
-            <Icon as={HiOutlineDotsHorizontal} h="48px" w="48px" />
-            <Text fontSize={["16px", "16px", "24px"]} textAlign="center">
-              顯示更多
-            </Text>
-          </Box>
         </Grid>
         <Image
           pos="absolute"

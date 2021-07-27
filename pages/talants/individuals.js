@@ -1,4 +1,4 @@
-import React from "react";
+import { getConfiguration } from "../../utils/configuration/getConfiguration";
 import { getPage } from "../../utils/page/getPage";
 import withPageCMS from "../../utils/page/withPageCMS";
 import { useRouter } from "next/router";
@@ -7,12 +7,15 @@ import {
   HStack,
   Image,
   VStack,
+  SimpleGrid,
+  GridItem,
   Tag,
   Box,
   Text,
   Wrap,
   Link,
   Button,
+  Stack,
   Avatar,
   Select,
 } from "@chakra-ui/react";
@@ -20,6 +23,7 @@ import NextLink from "next/link";
 import DividerSimple from "../../components/DividerSimple";
 import wordExtractor from "../../utils/wordExtractor";
 import Container from "../../components/Container";
+import moment from "moment";
 import { ArrowBackIcon } from "@chakra-ui/icons";
 import { useCallback } from "react";
 import identitySearch from "../../utils/api/IdentitySearch";
@@ -31,7 +35,6 @@ import ExperienceSection from "../../components/profile/sections/ExperienceSecti
 import ActivitySection from "../../components/profile/sections/ActivitySection";
 import getSharedServerSideProps from "../../utils/server/getSharedServerSideProps";
 import organizationSearch from "../../utils/api/OrganizationSearch";
-import ConnectedOrganization from "../../components/profile/sections/ConnectedOrganization";
 
 const PAGE_KEY = "identity_id_profile";
 
@@ -97,7 +100,6 @@ const IdentityOpportunities = ({
       editable={false}
     >
       <VStack align="stretch" flex={1} minW={0} w="100%">
-        <ConnectedOrganization />
         <PwdSection />
         <IdentityPortfolioSection />
         <IdentityBiographySection />
@@ -121,10 +123,7 @@ const IdentityOpportunities = ({
       {" "}
       {(identities ?? []).map((identity) => (
         <NextLink
-          href={generateUrlParameter({
-            identityId: identity?.id,
-            organizationId: router?.query?.organizationId,
-          })}
+          href={`/talants/individuals?identityId=${identity?.id}`}
           key={identity?.id}
         >
           <VStack
@@ -229,7 +228,10 @@ const IdentityOpportunities = ({
               </Text>
               <Text fontSize="xl">
                 {wordExtractor(page?.content?.wordings, "page_subtitle_1")}
-                <Link>
+                <Link href={wordExtractor(
+                      page?.content?.wordings,
+                      "page_subtitle_url"
+                    )}>
                   <Text d="inline" decoration="underline">
                     {wordExtractor(
                       page?.content?.wordings,
@@ -251,21 +253,20 @@ const IdentityOpportunities = ({
 
         <Box d={["none", "none", "block"]} bg="#fafafa" py={16}>
           <Container>
-            <Box w="300px">
+            <Box w={["100%", "100%", "250px", "330px"]}>
               <Select
                 value={router.query.organizationId ?? ""}
                 onChange={(e) =>
                   router.push(
-                    generateUrlParameter({
-                      identityId: "",
-                      organizationId: e.target.value,
-                    })
+                    generateUrlParameter({ organizationId: e.target.value })
                   )
                 }
                 variant="flushed"
               >
                 <option key="" value="">
-                  Organization
+                  {/* Organization */}
+                  {wordExtractor(page?.content?.wordings, "organization_text")}
+
                 </option>
                 {(organizations ?? []).map(
                   ({ id, chineseCompanyName, enghlishCompanyName }) => (
@@ -285,7 +286,7 @@ const IdentityOpportunities = ({
         </Box>
       </VStack>
       {/* mobile detail page */}
-      <Box bg="#fafafa" pt={[24, 0]} d={["block", "block", "none"]}>
+      <Box bg="#fafafa" pt={[0, 0]} d={["block", "block", "none"]}>
         {router.query.identityId ? (
           <Box px={1}>
             <NextLink href="/talants/individuals">
@@ -302,21 +303,19 @@ const IdentityOpportunities = ({
           </Box>
         ) : (
           <Box p={4}>
-            <Box w="300px">
+            <Box w={["100%", "100%", "250px", "330px"]}>
               <Select
                 value={router.query.organizationId ?? ""}
                 onChange={(e) =>
                   router.push(
-                    generateUrlParameter({
-                      identityId: "",
-                      organizationId: e.target.value,
-                    })
+                    generateUrlParameter({ organizationId: e.target.value })
                   )
                 }
                 variant="flushed"
               >
                 <option key="" value="">
-                  Organization
+                  {/* Organization */}
+                  {wordExtractor(page?.content?.wordings, "organization_text")}
                 </option>
                 {(organizations ?? []).map(
                   ({ id, chineseCompanyName, enghlishCompanyName }) => (

@@ -3,7 +3,6 @@ import { useForm } from "react-hook-form";
 import { useCallback, useEffect, useState } from "react";
 import FacebookLogin from "react-facebook-login/dist/facebook-login-render-props";
 import GoogleLogin from "react-google-login";
-import React from "react";
 
 import {
   Box,
@@ -35,7 +34,6 @@ import { getGraphQLClient } from "../utils/apollo";
 import { useGetWording } from "../utils/wordings/useWording";
 import router from "next/router";
 import AppleLogin from "react-apple-login";
-import { emailRegex } from "../utils/general";
 
 const RegisterModal = () => {
   const {
@@ -139,24 +137,10 @@ const RegisterModal = () => {
                     {getWording("register.register_email_label")}
                   </FormLabel>
                   <Input
-                    placeholder={getWording(
-                      "register.register_email_placeholder"
-                    )}
-                    {...register("email", {
-                      required: getWording(
-                        "register.register_email_error_message"
-                      ),
-                      pattern: {
-                        value: emailRegex,
-                        message: getWording(
-                          "register.register_email_error_message"
-                        ),
-                      },
-                    })}
+                    placeholder={getWording("register.register_email_placeholder")}
+                    {...register("email", {required: true})}
                   />
-                  <FormHelperText color="red">
-                    {errors?.email?.message}
-                  </FormHelperText>
+                    <FormHelperText color="red">{errors?.email?.type === 'required' && <Text>{getWording("register.register_email_required")}</Text>}</FormHelperText>
                 </FormControl>
                 <FormControl>
                   <Button
@@ -181,20 +165,7 @@ const RegisterModal = () => {
                   <FormLabel>
                     {getWording("register.register_phone_label")}
                   </FormLabel>
-                  <Input
-                    placeholder="91234567"
-                    {...register("phone", {
-                      required: getWording(
-                        "register.register_phone_error_message"
-                      ),
-                      pattern: {
-                        value: emailRegex,
-                        message: getWording(
-                          "register.register_phone_error_message"
-                        ),
-                      },
-                    })}
-                  />
+                  <Input placeholder="91234567" {...register("phone")} />
                   <FormHelperText>{errors?.phone?.message}</FormHelperText>
                 </FormControl>
                 <FormControl>
@@ -246,7 +217,7 @@ const RegisterModal = () => {
                   <HStack w="100%">
                     <IoMdPhonePortrait size={18} />
                     <Text flex={1} minW={0} w="100%">
-                      {getWording("register.sign_up_with_phone")}
+                      Sign Up With Phone
                     </Text>
                   </HStack>
                 </Button>
@@ -262,20 +233,57 @@ const RegisterModal = () => {
                   <HStack w="100%">
                     <AiOutlineMail size={18} />
                     <Text flex={1} minW={0} w="100%">
-                      {getWording("register.sign_up_with_email")}
+                      Sign Up With Email
                     </Text>
                   </HStack>
                 </Button>
               )}
-              
+              <FacebookLogin
+                appId="1091464314720526"
+                fields="name,email,picture"
+                callback={responseFacebook}
+                render={(renderProps) => (
+                  <Button
+                    colorScheme="facebook"
+                    color="white"
+                    onClick={renderProps.onClick}
+                  >
+                    <HStack w="100%">
+                      <IoLogoFacebook size={18} color="white" />
+                      <Text flex={1} minW={0} w="100%">
+                        Sign Up With Facebook
+                      </Text>
+                    </HStack>
+                  </Button>
+                )}
+              />
+              <GoogleLogin
+                clientId="452094479729-ra8prl39vh78qc4rucrpdu5p0l15e1rb.apps.googleusercontent.com"
+                render={(renderProps) => (
+                  <Button
+                    colorScheme="google"
+                    color="white"
+                    onClick={renderProps.onClick}
+                  >
+                    <HStack w="100%">
+                      <IoLogoGoogle size={18} color="white" />
+                      <Text flex={1} minW={0} w="100%">
+                        Sign Up With Google
+                      </Text>
+                    </HStack>
+                  </Button>
+                )}
+                buttonText="Login"
+                onSuccess={responseGoogle}
+                onFailure={responseGoogle}
+                cookiePolicy={"single_host_origin"}
+              />
               <AppleLogin
                 clientId="com.talkboxapp.teamwork.service.hku"
-                redirectURI="https://jciep.uat.talkbox.net/oauth/apple"
-                responseType={"code id_token"}
-                responseMode={"form_post"}
-                scope="email name"
-                usePopup={false}
-                nonce="NONCE"
+                redirectURI={`${process.env.HOST_URL}/oauth/apple`}
+                responseType={"code"}
+                responseMode={"query"}
+                usePopup={true}
                 render={(renderProps) => {
                   return (
                     <Button
@@ -288,7 +296,7 @@ const RegisterModal = () => {
                       <HStack w="100%">
                         <IoLogoApple size={18} color="white" />
                         <Text flex={1} minW={0} w="100%">
-                          {getWording("register.sign_up_with_apple")}
+                          Sign In With Apple
                         </Text>
                       </HStack>
                     </Button>

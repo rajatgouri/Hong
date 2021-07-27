@@ -160,11 +160,6 @@ const withPostCMS =
                 label: "人物/機構 Person/Organization",
                 component: "text",
               },
-              {
-                name: "tagline",
-                label: "標題 Tagline",
-                component: "text",
-              },
             ],
           },
           {

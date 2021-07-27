@@ -9,7 +9,6 @@ import {
   Wrap,
   Tag,
   useToast,
-  Box,
 } from "@chakra-ui/react";
 import wordExtractor from "../../../utils/wordExtractor";
 import OrganizationProfileStore from "../../../store/OrganizationProfileStore";
@@ -100,7 +99,7 @@ const NgoSectionViewer = () => {
           </Tag>
         </Wrap>
       </VStack>
-      <VStack px={8} py={4} align="stretch" spacing={4}>
+      <VStack px={8} py={4} align="stretch" spacing={6}>
         <Stack direction={["column", "column", "row"]}>
           <FormControl>
             <FormLabel color="#999" mb={0}>

@@ -1,5 +1,12 @@
-import React from "react";
-import { Text, Button, HStack, VStack, Stack } from "@chakra-ui/react";
+import {
+  Text,
+  Button,
+  HStack,
+  VStack,
+  AspectRatio,
+  Image,
+  Stack,
+} from "@chakra-ui/react";
 import { RiEdit2Line } from "react-icons/ri";
 import IdentityProfileStore from "../../../store/IdentityProfileStore";
 import wordExtractor from "../../../utils/wordExtractor";

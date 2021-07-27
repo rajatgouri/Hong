@@ -1,4 +1,3 @@
-import React from "react";
 import {
   Text,
   Box,
@@ -14,6 +13,7 @@ import {
   SimpleGrid,
   GridItem
 } from "@chakra-ui/react";
+import moment from "moment";
 import { useRouter } from "next/router";
 import { Controller, useFieldArray } from "react-hook-form";
 import { AiOutlineDelete, AiOutlinePlus } from "react-icons/ai";
@@ -22,7 +22,7 @@ import wordExtractor from "../../../utils/wordExtractor";
 import Dot from "./Dot";
 import MonthPicker from "./MonthPicker";
 
-const EducationSubSectionEditor = ({ form: { register, control, watch } }) => {
+const EducationSubSectionEditor = ({ form: { register, control } }) => {
   const { identity, page, enums } = IdentityProfileStore.useContext();
   const router = useRouter();
   const { fields, append, remove, insert } = useFieldArray({
@@ -53,8 +53,6 @@ const EducationSubSectionEditor = ({ form: { register, control, watch } }) => {
             errors?.education?.[index];
             const prefix = `education[${index}]`;
             const borderColor = present ? "#00BFBA" : "#eee";
-
-            const isCurrent = watch(`${prefix}.present`);
             return (
               <Box
                 pl={[0,2]}
@@ -77,6 +75,7 @@ const EducationSubSectionEditor = ({ form: { register, control, watch } }) => {
                   mb={12}
                   spacing={0.5}
                   fontSize={["lg", "sm"]}
+                  spacing={0}
                   align="start"
                 >
                   <HStack alignSelf="flex-end" pt={2}>
@@ -139,6 +138,12 @@ const EducationSubSectionEditor = ({ form: { register, control, watch } }) => {
                       {...register(`${prefix}.degree`, {})}
                       defaultValue={degree}
                     >
+                      <option key={"unselected"} value={""}>
+                        {wordExtractor(
+                          page?.content?.wordings,
+                          "empty_text_label"
+                        )}
+                      </option>
                       {(enums?.EnumDegreeList ?? []).map(
                         ({
                           key: value,
@@ -221,11 +226,7 @@ const EducationSubSectionEditor = ({ form: { register, control, watch } }) => {
                         control={control}
                         defaultValue={endDatetime}
                         render={({ field }) => (
-                          <MonthPicker
-                            page={page}
-                            {...field}
-                            isDisabled={isCurrent}
-                          />
+                          <MonthPicker page={page} {...field} />
                         )}
                       />
                       <FormHelperText color="red">

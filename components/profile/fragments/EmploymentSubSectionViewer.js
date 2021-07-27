@@ -1,5 +1,4 @@
-import React from "react";
-import { Text, Box, VStack, Wrap, Tag, Flex, HStack } from "@chakra-ui/react";
+import { Text, Box, VStack, Wrap, Tag } from "@chakra-ui/react";
 import moment from "moment";
 import { useRouter } from "next/router";
 import IdentityProfileStore from "../../../store/IdentityProfileStore";
@@ -21,7 +20,6 @@ const EmploymentSubSectionViewer = () => {
               present,
               startDatetime,
               endDatetime,
-              jobTitle,
               companyName,
               industry,
               employmentType,
@@ -51,6 +49,7 @@ const EmploymentSubSectionViewer = () => {
                   mb={8}
                   spacing={0.5}
                   fontSize={["lg", "sm"]}
+                  spacing={0}
                   align="start"
                 >
                   {present && (
@@ -66,33 +65,23 @@ const EmploymentSubSectionViewer = () => {
                       }
                     </Tag>
                     <Text>
-                      {startDatetime &&
-                        `${moment(startDatetime).format("YYYY/MM")} - `}
+                      {moment(startDatetime).format("MM/YYYY")} -{" "}
                       {present
-                        ? wordExtractor(
+                        ? moment(endDatetime).format("MM/YYYY")
+                        : wordExtractor(
                             page?.content?.wordings,
                             "present_label"
-                          )
-                        : endDatetime && moment(endDatetime).format("YYYY/MM")}
+                          )}
                     </Text>
                   </Wrap>
-                  <Text pt={2} fontSize={"md"} fontFamily="SFNSDisplay">
-                    {jobTitle}
+                  <Text pt={2} fontSize={"md"} fontFamily="SFNSDisplay">{companyName}</Text>
+                  <Text fontSize={"md"} color="#666666">
+                    {
+                      enums?.EnumEmploymentModeList?.find(
+                        (x) => x.key === employmentType
+                      )?.value?.[router.locale]
+                    }
                   </Text>
-                  <HStack>
-                    <Text fontSize={"md"} color="#666666">
-                      {companyName}
-                    </Text>
-                    {employmentType !== "unselected" && (
-                      <Tag size="sm" fontWeight="normal">
-                        {
-                          enums?.EnumEmploymentModeList?.find(
-                            (x) => x.key === employmentType
-                          )?.value?.[router.locale]
-                        }
-                      </Tag>
-                    )}
-                  </HStack>
                 </VStack>
               </Box>
             );

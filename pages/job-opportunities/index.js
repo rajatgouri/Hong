@@ -134,10 +134,6 @@ const JobOpportunities = ({ page }) => {
             "ul, ol": {
               px: 4,
             },
-            a: {
-              color: "green.500",
-              textDecor: "underline",
-            },
             li: {
               listStyle: "none",
               pb: 2,
@@ -311,7 +307,7 @@ const JobOpportunities = ({ page }) => {
               </Text>
               <Text fontSize="xl">
                 {wordExtractor(page?.content?.wordings, "page_subtitle_1")}
-                <Link decoration="underline">
+                <Link decoration="underline" href={wordExtractor(page?.content?.wordings, "page_subtitle_url")}>
                   {wordExtractor(page?.content?.wordings, "page_subtitle_link")}
                 </Link>
               </Text>
